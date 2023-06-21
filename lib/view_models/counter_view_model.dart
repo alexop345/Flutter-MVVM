@@ -1,13 +1,19 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:mvvm_practice/models/counter.dart';
 
-class CounterViewModel extends ChangeNotifier {
+class CounterViewModel {
   final Counter _counter = Counter();
+  final StreamController _streamController = StreamController();
+
+  CounterViewModel() {
+    _streamController.add(_counter.value);
+  }
 
   int get counter => _counter.value;
+  Stream get stream => _streamController.stream;
 
   void incrementCounter() {
-    _counter.value++;
-    notifyListeners();
+    _streamController.add(++_counter.value);
   }
 }
