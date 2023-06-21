@@ -4,7 +4,7 @@ import 'package:mvvm_practice/models/counter.dart';
 
 class CounterViewModel {
   final Counter _counter = Counter();
-  final StreamController _streamController = StreamController();
+  final StreamController<Counter> _streamController = StreamController();
 
   CounterViewModel() {
     _streamController.add(_counter);
