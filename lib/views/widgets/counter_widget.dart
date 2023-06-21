@@ -16,7 +16,7 @@ class CounterWidget extends StatelessWidget {
           stream: counterVM.stream,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Text(
-              snapshot.data != null ? snapshot.data.toString() : "0",
+              snapshot.data.toString(),
             );
           },
         ),
