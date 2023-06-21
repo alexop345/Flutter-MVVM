@@ -14,6 +14,11 @@ class HomeScreen extends StatelessWidget {
       body: const Center(
         child: CounterWidget(),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: counterVM.incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
