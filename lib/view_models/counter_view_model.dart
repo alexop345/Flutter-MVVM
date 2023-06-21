@@ -11,6 +11,7 @@ class CounterViewModel {
   }
 
   Stream get stream => _streamController.stream;
+  Counter get counter => _counter;
 
   void incrementCounter() {
     _counter.value++;
