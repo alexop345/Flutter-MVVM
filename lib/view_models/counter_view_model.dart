@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm_practice/models/counter.dart';
 
 class CounterViewModel extends ChangeNotifier {
-  int _counter = 0;
+  final Counter _counter = Counter();
 
-  int get counter => _counter;
+  int get counter => _counter.value;
 
   void incrementCounter() {
-    _counter++;
+    _counter.value++;
     notifyListeners();
   }
 }
