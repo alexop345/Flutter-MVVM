@@ -13,17 +13,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late HomeViewModel _viewModel;
-  Counter? counter;
 
   @override
   void initState() {
     super.initState();
     _viewModel = HomeViewModel(Input(PublishSubject<void>()));
-    _viewModel.output.onCountIncremented.listen((Counter value) {
-      setState(() {
-        counter = value;
-      });
-    });
   }
 
   @override
@@ -34,10 +28,15 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home MVVM'),
       ),
       body: Center(
-        child: counter == null
-            ? const CircularProgressIndicator()
-            : CounterWidget(counter!),
-      ),
+          child: StreamBuilder<Counter>(
+        stream: _viewModel.output.onCountIncremented,
+        builder: (ctx, snapshot) {
+          if (snapshot.hasData) {
+            return CounterWidget(snapshot.data!);
+          }
+          return const CircularProgressIndicator();
+        },
+      )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _viewModel.input.onIncrement.add(null);
