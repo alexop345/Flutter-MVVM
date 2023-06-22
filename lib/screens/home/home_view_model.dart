@@ -1,14 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:mvvm_practice/models/counter.dart';
+import 'package:mvvm_practice/repo/counter_repo.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeViewModel {
   final Input input;
   late Output output;
-  final Counter _counter;
+  final Counter _counter = Counter();
+  final CounterRepo _counterRepo;
 
-  HomeViewModel(this.input, {counterRepo}): _counter = counterRepo ?? Counter() {
+  HomeViewModel(this.input, {counterRepo}): _counterRepo = counterRepo ?? CounterRepo() {
+   
     Stream<Counter> onCountIncremented = input.onIncrement.flatMap(
       (_) {
         _counter.value++;

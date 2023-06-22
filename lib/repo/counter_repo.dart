@@ -9,23 +9,23 @@ class CounterRepo {
     return Stream.fromFuture(SharedPreferences.getInstance());
   }
 
-  Stream<String?> getString(String key) {
+  Stream<String?> _getString(String key) {
     return _initSharedPreferences().map((sharedPreferences) {
       return sharedPreferences.getString(key);
     });
   }
 
-  Stream<bool> setString(String key, String value) {
+  Stream<bool> _setString(String key, String value) {
     return _initSharedPreferences().flatMap((sharedPreferences) {
       return sharedPreferences.setString(key, value).asStream();
     });
   }
 
   Stream<Counter> setCounter(Counter counter) {
-    return setString('counter', jsonEncode(counter.toJson())).flatMap((value) => Stream.value(counter));
+    return _setString('counter', jsonEncode(counter.toJson())).flatMap((value) => Stream.value(counter));
   }
 
   Stream<Counter> getCounter() {
-    return getString('counter').flatMap((value) => value != null ? Stream.value(Counter.fromJson(jsonDecode(value))) : Stream.value(Counter()));
+    return _getString('counter').flatMap((value) => value != null ? Stream.value(Counter.fromJson(jsonDecode(value))) : Stream.value(Counter()));
   }
 }
