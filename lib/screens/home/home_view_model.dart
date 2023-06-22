@@ -6,7 +6,7 @@ import 'package:rxdart/rxdart.dart';
 class HomeViewModel {
   final Input input;
   late Output output;
-  final Counter _counter; //from repo later
+  final Counter _counter;
 
   HomeViewModel(this.input, {counterRepo}): _counter = counterRepo ?? Counter() {
     Stream<Counter> onCountIncremented = input.onIncrement.flatMap(
