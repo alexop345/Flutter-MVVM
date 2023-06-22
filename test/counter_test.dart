@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mvvm_practice/models/counter.dart';
-import 'package:mvvm_practice/view_models/counter_view_model.dart';
+import 'package:mvvm_practice/screens/home/home_view_model.dart';
 
 main() {
   group('Counter tests', () {
