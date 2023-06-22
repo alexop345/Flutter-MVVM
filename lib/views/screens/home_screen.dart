@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
           stream: counterVM.stream,
           builder: (ctx, snapshot) {
             if (snapshot.hasData) {
-              return CounterWidget(snapshot.data);
+              return CounterWidget(snapshot.data!);
             } 
             return const CircularProgressIndicator();
           },

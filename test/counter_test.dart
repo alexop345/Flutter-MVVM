@@ -12,7 +12,7 @@ main() {
       'Test stream emits counter with value 0',
       () {
         final stream = counterVM.stream;
-        final Counter counter = counterVM.counter;
+        final Counter counter = Counter();
 
         expect(stream, emits(counter));
         expect(counter.value, 0);
@@ -22,7 +22,7 @@ main() {
     test(
       'Test increment counter',
       () {
-        final Counter counter = counterVM.counter;
+        final Counter counter = Counter();
 
         counterVM.incrementCounter();
         expect(counter.value, 1);

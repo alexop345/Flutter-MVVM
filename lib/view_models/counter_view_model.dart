@@ -11,8 +11,7 @@ class CounterViewModel {
     _behaviorSubject.add(_counter);
   }
 
-  Stream get stream => _behaviorSubject.stream;
-  Counter get counter => _counter;
+  Stream<Counter> get stream => _behaviorSubject.stream;
 
   void incrementCounter() {
     _counter.value++;
