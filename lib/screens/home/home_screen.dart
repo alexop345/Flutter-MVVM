@@ -17,7 +17,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _viewModel = HomeViewModel(Input(PublishSubject<void>()));
+    _viewModel = HomeViewModel(
+      Input(PublishSubject<void>()),
+    );
   }
 
   @override
@@ -28,15 +30,19 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home MVVM'),
       ),
       body: Center(
-          child: StreamBuilder<Counter>(
-        stream: _viewModel.output.onCountIncremented,
-        builder: (ctx, snapshot) {
-          if (snapshot.hasData) {
-            return CounterWidget(snapshot.data!);
-          }
-          return const CircularProgressIndicator();
-        },
-      )),
+        child: StreamBuilder<Counter>(
+          stream: _viewModel.output.onCountIncremented,
+          builder: (ctx, snapshot) {
+            if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            if (snapshot.hasData) {
+              return CounterWidget(snapshot.data!);
+            }
+            return const CircularProgressIndicator();
+          },
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _viewModel.input.onIncrement.add(null);

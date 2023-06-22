@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:mvvm_practice/models/counter.dart';
 import 'package:mvvm_practice/repo/counter_repo.dart';
@@ -8,17 +7,24 @@ import 'package:rxdart/rxdart.dart';
 class HomeViewModel {
   final Input input;
   late Output output;
-  final Counter _counter = Counter();
   final CounterRepo _counterRepo;
 
-  HomeViewModel(this.input, {counterRepo}): _counterRepo = counterRepo ?? CounterRepo() {
-   
+  HomeViewModel(this.input, {counterRepo})
+      : _counterRepo = counterRepo ?? CounterRepo() {
     Stream<Counter> onCountIncremented = input.onIncrement.flatMap(
       (_) {
-        _counter.value++;
-        return Stream.value(_counter);
+        return _counterRepo.getCounter().flatMap((Counter counter) {
+          counter.value++;
+          return _counterRepo.setCounter(counter).flatMap((Counter counter) {
+            if (counter.value >= 10) {
+              return Stream.error('The counter has reached 10. Please reset.');
+            }
+            return Stream.value(counter);
+          });
+        });
       },
     );
+
     output = Output(onCountIncremented);
   }
 }
