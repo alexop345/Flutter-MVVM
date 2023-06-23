@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_practice/models/counter.dart';
 import 'package:mvvm_practice/screens/home/home_view_model.dart';
 import 'package:mvvm_practice/widgets/counter_widget.dart';
 import 'package:rxdart/rxdart.dart';
