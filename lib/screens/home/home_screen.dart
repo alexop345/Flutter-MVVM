@@ -13,13 +13,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late HomeViewModel _viewModel;
+  Widget content = const CircularProgressIndicator();
 
   @override
   void initState() {
     super.initState();
-    _viewModel = HomeViewModel(
-      Input(BehaviorSubject<bool>.seeded(false)),
-    );
+    _setContent();
   }
 
   @override
@@ -30,36 +29,52 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home MVVM'),
       ),
       body: Center(
-        child: StreamBuilder<Counter>(
-          stream: _viewModel.output.onCountIncremented,
-          builder: (ctx, snapshot) {
-            if (snapshot.hasError) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(snapshot.error.toString()),
-                  OutlinedButton(
-                      onPressed: () {
-                        _viewModel.input.onIncrement.add(true);
-                      },
-                      child: const Text('Reset'))
-                ],
-              );
-            }
-            if (snapshot.hasData) {
-              return CounterWidget(snapshot.data!);
-            }
-            return const CircularProgressIndicator();
-          },
-        ),
+        child: content,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _viewModel.input.onIncrement.add(true);
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: content is CounterWidget
+          ? FloatingActionButton(
+              onPressed: () {
+                _viewModel.input.onIncrement.add(true);
+              },
+              tooltip: 'Increment',
+              child: const Icon(Icons.add),
+            )
+          : null,
+    );
+  }
+
+  void _setContent() {
+    _viewModel = HomeViewModel(
+      Input(
+        BehaviorSubject<bool>.seeded(false),
+        PublishSubject<void>(),
       ),
     );
+
+    _viewModel.output.onCountIncremented.listen((data) {
+      setState(() {
+        content = CounterWidget(data);
+      });
+    }, onError: (err) {
+      setState(() {
+        content = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(err),
+            OutlinedButton(
+                onPressed: () {
+                  _viewModel.input.onReset.add(null);
+                },
+                child: const Text('Reset'))
+          ],
+        );
+      });
+    });
+
+    _viewModel.output.onCountReset.listen((data) {
+      setState(() {
+        content = CounterWidget(data);
+      });
+    });
   }
 }

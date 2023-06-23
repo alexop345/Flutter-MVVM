@@ -13,11 +13,6 @@ class HomeViewModel {
       : _counterRepo = counterRepo ?? CounterRepo() {
     Stream<Counter> onCountIncremented = input.onIncrement.flatMap(
       (bool increment) {
-        // if (reset) {
-        //   return _counterRepo.setCounter(Counter()).flatMap((Counter counter) {
-        //     return Stream.value(counter);
-        //   });
-        // }
         return _counterRepo.getCounter().flatMap((Counter counter) {
           if (!increment) {
             return Stream.value(counter);
@@ -33,18 +28,26 @@ class HomeViewModel {
       },
     );
 
-    output = Output(onCountIncremented);
+    Stream<Counter> onCountReset = input.onReset.flatMap((_) {
+      return _counterRepo.setCounter(Counter()).flatMap((Counter counter) {
+        return Stream.value(counter);
+      });
+    });
+
+    output = Output(onCountIncremented, onCountReset);
   }
 }
 
 class Input {
   final Subject<bool> onIncrement;
+  final Subject<void> onReset;
 
-  Input(this.onIncrement);
+  Input(this.onIncrement, this.onReset);
 }
 
 class Output {
   final Stream<Counter> onCountIncremented;
+  final Stream<Counter> onCountReset;
 
-  Output(this.onCountIncremented);
+  Output(this.onCountIncremented, this.onCountReset);
 }
