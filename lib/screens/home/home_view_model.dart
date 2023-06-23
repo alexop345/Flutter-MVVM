@@ -12,8 +12,16 @@ class HomeViewModel {
   HomeViewModel(this.input, {counterRepo})
       : _counterRepo = counterRepo ?? CounterRepo() {
     Stream<Counter> onCountIncremented = input.onIncrement.flatMap(
-      (_) {
+      (bool increment) {
+        // if (reset) {
+        //   return _counterRepo.setCounter(Counter()).flatMap((Counter counter) {
+        //     return Stream.value(counter);
+        //   });
+        // }
         return _counterRepo.getCounter().flatMap((Counter counter) {
+          if (!increment) {
+            return Stream.value(counter);
+          }
           counter.value++;
           return _counterRepo.setCounter(counter).flatMap((Counter counter) {
             if (counter.value >= 10) {
@@ -30,7 +38,7 @@ class HomeViewModel {
 }
 
 class Input {
-  final Subject<void> onIncrement;
+  final Subject<bool> onIncrement;
 
   Input(this.onIncrement);
 }
