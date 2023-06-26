@@ -6,15 +6,15 @@ class SharedPrefRepo {
     return Stream.fromFuture(SharedPreferences.getInstance());
   }
 
-  Stream<String?> getString(String key) {
+  Stream<String?> getString(StorageKey key) {
     return _initSharedPreferences().map((sharedPreferences) {
-      return sharedPreferences.getString(key);
+      return sharedPreferences.getString(key.name);
     });
   }
 
-  Stream<bool> setString(String key, String value) {
+  Stream<bool> setString(StorageKey key, String value) {
     return _initSharedPreferences().flatMap((sharedPreferences) {
-      return sharedPreferences.setString(key, value).asStream();
+      return sharedPreferences.setString(key.name, value).asStream();
     });
   }
 }

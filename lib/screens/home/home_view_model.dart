@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:mvvm_practice/models/counter.dart';
 import 'package:mvvm_practice/repo/counter_repo.dart';
+import 'package:mvvm_practice/repo/shared_pref_repo.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeViewModel {
@@ -10,7 +11,7 @@ class HomeViewModel {
   final CounterRepo _counterRepo;
 
   HomeViewModel(this.input, {counterRepo})
-      : _counterRepo = counterRepo ?? CounterRepo() {
+      : _counterRepo = counterRepo ?? CounterRepo(sharedPref: SharedPrefRepo()) {
     Stream<Counter> increment = input.onIncrement.flatMap(
       (bool increment) {
         return _counterRepo.getCounter().flatMap((Counter counter) {
@@ -21,17 +22,13 @@ class HomeViewModel {
             return Stream.value(counter);
           }
           counter.value++;
-          return _counterRepo.setCounter(counter).flatMap((Counter counter) {
-            return Stream.value(counter);
-          });
+          return _counterRepo.setCounter(counter);
         });
       },
     );
 
     Stream<Counter> reset = input.onReset.flatMap((_) {
-      return _counterRepo.setCounter(Counter()).flatMap((Counter counter) {
-        return Stream.value(counter);
-      });
+      return _counterRepo.setCounter(Counter());
     });
 
     output = Output(MergeStream([increment, reset]));

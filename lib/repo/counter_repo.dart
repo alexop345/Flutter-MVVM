@@ -5,13 +5,20 @@ import 'package:mvvm_practice/repo/shared_pref_repo.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CounterRepo {
-  final SharedPrefRepo _sharedPrefRepo = SharedPrefRepo();
+  final SharedPrefRepo _sharedPrefRepo;
+
+  CounterRepo({sharedPref}) : _sharedPrefRepo = sharedPref ?? SharedPrefRepo();
 
   Stream<Counter> setCounter(Counter counter) {
-    return _sharedPrefRepo.setString(StorageKey.counter.name, jsonEncode(counter.toJson())).flatMap((value) => Stream.value(counter));
+    return _sharedPrefRepo
+        .setString(StorageKey.counter, jsonEncode(counter.toJson()))
+        .flatMap((value) => Stream.value(counter));
   }
 
   Stream<Counter> getCounter() {
-    return _sharedPrefRepo.getString(StorageKey.counter.name).flatMap((value) => value != null ? Stream.value(Counter.fromJson(jsonDecode(value))) : Stream.value(Counter()));
+    return _sharedPrefRepo.getString(StorageKey.counter).flatMap((value) =>
+        value != null
+            ? Stream.value(Counter.fromJson(jsonDecode(value)))
+            : Stream.value(Counter()));
   }
 }
