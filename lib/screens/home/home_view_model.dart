@@ -15,8 +15,8 @@ class HomeViewModel {
       (bool increment) {
         return _counterRepo.getCounter().flatMap((Counter counter) {
           if (counter.value >= 10) {
-              return Stream.error('The counter has reached 10. Please reset.');
-            }
+            return Stream.error('The counter has reached 10. Please reset.');
+          }
           if (!increment) {
             return Stream.value(counter);
           }
@@ -28,22 +28,13 @@ class HomeViewModel {
       },
     );
 
-    Stream<Counter?> reset = input.onReset.flatMap((bool reset) {
-      if (reset) {
-        return _counterRepo.setCounter(Counter()).flatMap((Counter counter) {
-          return Stream.value(counter);
-        });
-      }
-      return Stream.value(null);
+    Stream<Counter> reset = input.onReset.flatMap((_) {
+      return _counterRepo.setCounter(Counter()).flatMap((Counter counter) {
+        return Stream.value(counter);
+      });
     });
 
-    Stream<Counter> onCountResult =
-        Rx.combineLatest2(increment, reset, (Counter count1, Counter? count2) {
-      if (count2 != null) return count2;
-      return count1;
-    });
-
-    output = Output(onCountResult);
+    output = Output(MergeStream([increment, reset]));
   }
 
   dispose() {
@@ -54,7 +45,7 @@ class HomeViewModel {
 
 class Input {
   final Subject<bool> onIncrement;
-  final Subject<bool> onReset;
+  final Subject<void> onReset;
 
   Input(this.onIncrement, this.onReset);
 }

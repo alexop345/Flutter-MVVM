@@ -19,8 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _viewModel = HomeViewModel(
       Input(
-        BehaviorSubject<bool>.seeded(false),
-        BehaviorSubject<bool>.seeded(false),
+        BehaviorSubject.seeded(false),
+        PublishSubject(),
       ),
     );
   }
@@ -50,8 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (snapshot.hasData) CounterWidget(snapshot.data!),
                   OutlinedButton(
                       onPressed: () {
-                        _viewModel.input.onReset.add(true);
-                        _viewModel.input.onIncrement.add(false);
+                        _viewModel.input.onReset.add(null);
                       },
                       child: const Text('Reset'))
                 ],
@@ -64,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _viewModel.input.onIncrement.add(true);
-          _viewModel.input.onReset.add(false);
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
