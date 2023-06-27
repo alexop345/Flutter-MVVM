@@ -44,8 +44,6 @@ main() {
   test('should return error if initial value == 10', () {
     Counter counter = Counter(value: 10);
     when(() => repo.getCounter()).thenAnswer((_) => Stream.value(counter));
-    when(() => repo.setCounter(counter))
-        .thenAnswer((_) => Stream.value(counter));
     expect(viewModel.output.onCountResult, emitsError(errorMessage));
   });
 
